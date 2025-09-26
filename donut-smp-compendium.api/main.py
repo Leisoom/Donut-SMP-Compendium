@@ -1,18 +1,18 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
+import requests
+from dotenv import load_dotenv
+import os
+load_dotenv()
 
 app = FastAPI()
 
+api_key = os.getenv("API_KEY")
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", )
 async def root():
-    return """
-    <html>
-        <head>
-            <title>Some HTML in here</title>
-        </head>
-        <body>
-            <h1>Look ma! HTML!</h1>
-        </body>
-    </html>
-    """
+
+    player = requests.get("https://api.donutsmp.net/v1/stats/leisoom",headers={'Authorization': f"Bearer {api_key}"});
+    player_json = player.json()['result']
+
+    return {'shards' : player_json['deaths']}
